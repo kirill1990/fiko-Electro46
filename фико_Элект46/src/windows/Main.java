@@ -1041,6 +1041,7 @@ public class Main extends JFrame
 		header.add("Октябрь");
 		header.add("Ноябрь");
 		header.add("Декабрь");
+		header.add("Год");
 
 		// Помещаю в модель таблицы данные
 		DefaultTableModel dtm = (DefaultTableModel) jtable.getModel();
