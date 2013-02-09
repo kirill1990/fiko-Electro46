@@ -1393,7 +1393,7 @@ public class Main extends JFrame
 									new ToExcelSbut(name.get(i), name.get(i + 1), year);
 								}
 
-								JOptionPane.showMessageDialog(null, "finish");
+								//JOptionPane.showMessageDialog(null, "finish");
 							}
 						});
 					}

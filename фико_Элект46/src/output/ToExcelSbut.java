@@ -2,6 +2,8 @@ package output;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -29,27 +31,28 @@ public class ToExcelSbut
 {
 	WritableCellFormat	tahoma9pt				= null;
 	WritableCellFormat	tahoma9ptGreen			= null;
+	WritableCellFormat	tahoma9ptRed			= null;
+	WritableCellFormat	tahoma9ptORANGE			= null;
 	WritableCellFormat	tahoma9ptYellow			= null;
 	WritableCellFormat	tahoma9ptLeft			= null;
 	WritableCellFormat	tahoma12ptNoBold		= null;
 	WritableCellFormat	tahoma12ptBold			= null;
 	WritableCellFormat	tahoma9ptLeftBoldGray	= null;
-	String year = "2012";
-	String[] months = { "январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь" };
 
+	String				year					= "2012";
+	String[]			months					= { "январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь" };
 
 	public ToExcelSbut(String name, String inn, String year)
 	{
 		WorkbookSettings ws = new WorkbookSettings();
 		ws.setLocale(new Locale("ru", "RU"));
-		
+
 		this.year = year;
-		
+
 		try
 		{
 			/*
 			 * Основной формат ячеек
-			 * 
 			 * Tahoma 9pt, no bold
 			 * выравнивание по горизонтале: центр
 			 * выравнивание по вертикале: центр
@@ -65,7 +68,6 @@ public class ToExcelSbut
 
 			/*
 			 * формат ячеек зелёного цвета
-			 * 
 			 * Tahoma 9pt, no bold
 			 * выравнивание по горизонтале: по правому краю
 			 * выравнивание по вертикале: центр
@@ -80,9 +82,22 @@ public class ToExcelSbut
 			tahoma9ptGreen.setBorder(Border.ALL, BorderLineStyle.MEDIUM);
 			tahoma9ptGreen.setBackground(Colour.LIGHT_GREEN);
 
+			tahoma9ptRed = new WritableCellFormat(new WritableFont(WritableFont.TAHOMA, 9, WritableFont.NO_BOLD));
+			tahoma9ptRed.setAlignment(Alignment.RIGHT);
+			tahoma9ptRed.setVerticalAlignment(VerticalAlignment.CENTRE);
+			tahoma9ptRed.setWrap(true);
+			tahoma9ptRed.setBorder(Border.ALL, BorderLineStyle.MEDIUM);
+			tahoma9ptRed.setBackground(Colour.RED);
+
+			tahoma9ptORANGE = new WritableCellFormat(new WritableFont(WritableFont.TAHOMA, 9, WritableFont.NO_BOLD));
+			tahoma9ptORANGE.setAlignment(Alignment.RIGHT);
+			tahoma9ptORANGE.setVerticalAlignment(VerticalAlignment.CENTRE);
+			tahoma9ptORANGE.setWrap(true);
+			tahoma9ptORANGE.setBorder(Border.ALL, BorderLineStyle.MEDIUM);
+			tahoma9ptORANGE.setBackground(Colour.LIGHT_ORANGE);
+
 			/*
 			 * формат ячеек жёлтого цвета
-			 * 
 			 * Tahoma 9pt, no bold
 			 * выравнивание по горизонтале: по правому краю
 			 * выравнивание по вертикале: центр
@@ -99,7 +114,6 @@ public class ToExcelSbut
 
 			/*
 			 * Основной с выравниванием по левому краю
-			 * 
 			 * Tahoma 9pt, no bold
 			 * выравнивание по горизонтале: по левому краю
 			 * выравнивание по вертикале: центр
@@ -115,7 +129,6 @@ public class ToExcelSbut
 
 			/*
 			 * Основной с выравниванием по центру без рамки
-			 * 
 			 * Tahoma 9pt, no bold
 			 * выравнивание по горизонтале: центр
 			 * выравнивание по вертикале: центр
@@ -131,7 +144,6 @@ public class ToExcelSbut
 
 			/*
 			 * Основной с выравниванием по центру без рамки
-			 * 
 			 * Tahoma 9pt, no bold
 			 * выравнивание по горизонтале: центр
 			 * выравнивание по вертикале: центр
@@ -147,7 +159,6 @@ public class ToExcelSbut
 
 			/*
 			 * Основной жирный c серым оттенком, по левому краю
-			 * 
 			 * Tahoma 9pt, bold
 			 * выравнивание по горизонтале: по левому краю
 			 * выравнивание по вертикале: центр
@@ -228,7 +239,12 @@ public class ToExcelSbut
 		sheet.mergeCells(0, 1, 10, 1);
 		sheet.setRowView(1, 750);
 
-		for (int p = 0; p < 2; p++)
+		for (int p = 3; p < 120; p++)
+		{
+			sheet.setRowView(p, 450);
+		}
+
+		for (int p = 0; p < 4; p++)
 		{
 			sheet.addCell(new Label(0, 3 + p * 25, "Потребители", tahoma9pt));
 			sheet.mergeCells(0, 3 + p * 25, 0, 5 + p * 25);
@@ -275,6 +291,8 @@ public class ToExcelSbut
 			sheet.addCell(new Label(1, 22 + p * 25, "311", tahoma9pt));
 			sheet.addCell(new Label(1, 23 + p * 25, "321", tahoma9pt));
 			sheet.addCell(new Label(1, 24 + p * 25, "491", tahoma9pt));
+
+			sheet.setRowView(4 + p * 25, 850);
 		}
 
 		sheet.setColumnView(0, 50);
@@ -282,25 +300,21 @@ public class ToExcelSbut
 		{
 			sheet.setColumnView(p, 15);
 		}
-		for (int p = 3; p < 60; p++)
-		{
-			sheet.setRowView(p, 450);
-		}
-		sheet.setRowView(4, 850);
-		sheet.setRowView(29, 850);
-
-		
-		
 		@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+
+		Vector<Vector<Double>> done_num = new Vector<Vector<Double>>();
 
 		for (int v = 0; v < 19 * 6; v++)
 		{
 			Vector<String> element = new Vector<String>();
+			Vector<Double> el_num = new Vector<Double>();
 			for (int r = 0; r < 5; r++)
 			{
 				element.add("");
+				el_num.add((Double) 0.0);
 			}
 			done.add(element);
+			done_num.add(el_num);
 		}
 
 		/*
@@ -404,64 +418,146 @@ public class ToExcelSbut
 					{
 						for (int a2 = 1; a2 < 5; a2++)
 						{
+							Double sum = new BigDecimal(done_num.get(res_i).get(a2) + parseStringToDouble(result.get(res_i).get(a2).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+							done_num.get(res_i).set(a2, sum);
 							sheet.addCell(new Label(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, toNumberString(result.get(res_i).get(a2).toString()), tahoma9ptYellow));
 						}
+
+						Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(0, sum);
 						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, toNumberString(result.get(res_i++).get(0).toString()), tahoma9ptGreen));
 					}
 				}
 			}
 		}
 
-		// год
-
-		int x = 6;
-		int y = 1;
-
-		sheet.addCell(new Label(2 + x * 5 * 6, 3 + y * 25, "Год", tahoma12ptBold));
-		sheet.mergeCells(2 + x * 5 * 6, 3 + y * 25, 1 + (x + 1) * 5 * 6, 3 + y * 25);
-
-		int res_i = 0;
-
-		for (int i = 0; i < 6; i++)
+		// итог
 		{
-			sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 5 + y * 25, "Всего", tahoma9pt));
+			int x = 0;
+			int y = 2;
 
-			switch (i)
+			sheet.addCell(new Label(2 + x * 5 * 6, 3 + y * 25, "Итог", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 6, 3 + y * 25, 1 + (x + 1) * 5 * 6, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 6; i++)
 			{
-				case 0:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-					break;
-				case 1:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-				case 2:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-					break;
-				case 3:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-				case 4:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-					break;
-				case 5:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-			}
-			sheet.mergeCells(2 + i * 5 + x * 6 * 5, 4 + y * 25, 6 + i * 5 + x * 6 * 5, 4 + y * 25);
+				sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 5 + y * 25, "Всего", tahoma9pt));
 
-			sheet.addCell(new Label(3 + i * 5 + x * 6 * 5, 5 + y * 25, "ВН", tahoma9pt));
-			sheet.addCell(new Label(4 + i * 5 + x * 6 * 5, 5 + y * 25, "СН1", tahoma9pt));
-			sheet.addCell(new Label(5 + i * 5 + x * 6 * 5, 5 + y * 25, "СН2", tahoma9pt));
-			sheet.addCell(new Label(6 + i * 5 + x * 6 * 5, 5 + y * 25, "НН", tahoma9pt));
-
-			for (int a = 0; a < 19; a++)
-			{
-				for (int a2 = 1; a2 < 5; a2++)
+				switch (i)
 				{
-					sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 5:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
 				}
-				// ВН
-				sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				sheet.mergeCells(2 + i * 5 + x * 6 * 5, 4 + y * 25, 6 + i * 5 + x * 6 * 5, 4 + y * 25);
+
+				sheet.addCell(new Label(3 + i * 5 + x * 6 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 6 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 6 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 6 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					}
+					// ВН
+					sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				}
+			}
+		}
+
+		// Год
+		{
+			int x = 0;
+			int y = 3;
+
+			@SuppressWarnings({ "rawtypes" }) Vector<Vector> result = new ConnectionBD().getInfoSbut(name, "год", year, 0, 5);
+
+			sheet.addCell(new Label(2 + x * 5 * 6, 3 + y * 25, "Год", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 6, 3 + y * 25, 1 + (x + 1) * 5 * 6, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 6; i++)
+			{
+				sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 5 + y * 25, "Всего", tahoma9pt));
+
+				switch (i)
+				{
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 5:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+				}
+				sheet.mergeCells(2 + i * 5 + x * 6 * 5, 4 + y * 25, 6 + i * 5 + x * 6 * 5, 4 + y * 25);
+
+				sheet.addCell(new Label(3 + i * 5 + x * 6 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 6 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 6 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 6 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
+
+						if (res.equals(done_num.get(res_i).get(a2)))
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptORANGE));
+						}
+					}
+					// ВН
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+
+					if (res.equals(done_num.get(res_i).get(0)))
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptRed));
+					}
+				}
 			}
 		}
 	}
@@ -473,7 +569,12 @@ public class ToExcelSbut
 		sheet.mergeCells(0, 1, 10, 1);
 		sheet.setRowView(1, 750);
 
-		for (int p = 0; p < 2; p++)
+		for (int p = 3; p < 60; p++)
+		{
+			sheet.setRowView(p, 450);
+		}
+
+		for (int p = 0; p < 4; p++)
 		{
 			sheet.addCell(new Label(0, 3 + p * 12, "Потребители", tahoma9pt));
 			sheet.mergeCells(0, 3 + p * 12, 0, 5 + p * 12);
@@ -495,6 +596,7 @@ public class ToExcelSbut
 			sheet.addCell(new Label(1, 10 + p * 12, "200", tahoma9pt));
 			sheet.addCell(new Label(1, 11 + p * 12, "491", tahoma9pt));
 
+			sheet.setRowView(4 + p * 12, 1500);
 		}
 
 		sheet.setColumnView(0, 50);
@@ -503,23 +605,21 @@ public class ToExcelSbut
 			sheet.setColumnView(p, 15);
 		}
 
-		for (int p = 3; p < 30; p++)
-		{
-			sheet.setRowView(p, 450);
-		}
-		sheet.setRowView(4, 1500);
-		sheet.setRowView(16, 850);
-
 		@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+
+		Vector<Vector<Double>> done_num = new Vector<Vector<Double>>();
 
 		for (int v = 0; v < 6 * 5; v++)
 		{
 			Vector<String> element = new Vector<String>();
+			Vector<Double> el = new Vector<Double>();
 			for (int r = 0; r < 5; r++)
 			{
 				element.add("");
+				el.add((Double) 0.0);
 			}
 			done.add(element);
+			done_num.add(el);
 		}
 
 		for (int p = 0; p < months.length; p++)
@@ -623,75 +723,165 @@ public class ToExcelSbut
 					{
 						for (int a2 = 1; a2 < 3; a2++)
 						{
+							Double sum = new BigDecimal(done_num.get(res_i).get(a2) + parseStringToDouble(result.get(res_i).get(a2).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+							done_num.get(res_i).set(a2, sum);
 							sheet.addCell(new Label(2 + i * 3 + x * 3 * 5 + a2, 6 + y * 12 + a, toNumberString(result.get(res_i).get(a2).toString()), tahoma9ptYellow));
 						}
+						Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(0, sum);
 						sheet.addCell(new Label(2 + i * 3 + x * 3 * 5, 6 + y * 12 + a, toNumberString(result.get(res_i++).get(0).toString()), tahoma9ptGreen));
 					}
 				}
 			}
 		}
 
-		// год
-
-		int x = 6;
-		int y = 1;
-
-		sheet.addCell(new Label(2 + x * 3 * 5, 3 + y * 12, "Год", tahoma12ptBold));
-		sheet.mergeCells(2 + x * 3 * 5, 3 + y * 12, 1 + (x + 1) * 3 * 5, 3 + y * 12);
-
-		sheet.addCell(new Label(2 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии за отчетный месяц (год), тыс кВтч всего", tahoma9pt));
-		sheet.mergeCells(2 + x * 3 * 5, 4 + y * 12, 2 + x * 3 * 5, 5 + y * 12);
-
-		sheet.addCell(new Label(3 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
-		sheet.mergeCells(3 + x * 3 * 5, 4 + y * 12, 3 + x * 3 * 5, 5 + y * 12);
-
-		sheet.addCell(new Label(4 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
-		sheet.mergeCells(4 + x * 3 * 5, 4 + y * 12, 4 + x * 3 * 5, 5 + y * 12);
-
-		sheet.addCell(new Label(5 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год), тыс. кВтч всего", tahoma9pt));
-		sheet.mergeCells(5 + x * 3 * 5, 4 + y * 12, 5 + x * 3 * 5, 5 + y * 12);
-
-		sheet.addCell(new Label(6 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
-		sheet.mergeCells(6 + x * 3 * 5, 4 + y * 12, 6 + x * 3 * 5, 5 + y * 12);
-
-		sheet.addCell(new Label(7 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
-		sheet.mergeCells(7 + x * 3 * 5, 4 + y * 12, 7 + x * 3 * 5, 5 + y * 12);
-
-		sheet.addCell(new Label(8 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-		sheet.mergeCells(8 + x * 3 * 5, 4 + y * 12, 10 + x * 3 * 5, 4 + y * 12);
-
-		sheet.addCell(new Label(11 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
-		sheet.mergeCells(11 + x * 3 * 5, 4 + y * 12, 13 + x * 3 * 5, 4 + y * 12);
-
-		sheet.addCell(new Label(14 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
-		sheet.mergeCells(14 + x * 3 * 5, 4 + y * 12, 16 + x * 3 * 5, 4 + y * 12);
-
-		sheet.addCell(new Label(8 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
-		sheet.addCell(new Label(9 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
-		sheet.addCell(new Label(10 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
-
-		sheet.addCell(new Label(11 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
-		sheet.addCell(new Label(12 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
-		sheet.addCell(new Label(13 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
-
-		sheet.addCell(new Label(14 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
-		sheet.addCell(new Label(15 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
-		sheet.addCell(new Label(16 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
-
-		int res_i = 0;
-
-		for (int i = 0; i < 5; i++)
+		// Итог
 		{
-			for (int a = 0; a < 6; a++)
+			int x = 0;
+			int y = 2;
+
+			sheet.addCell(new Label(2 + x * 3 * 5, 3 + y * 12, "Итог", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 3 * 5, 3 + y * 12, 1 + (x + 1) * 3 * 5, 3 + y * 12);
+
+			sheet.addCell(new Label(2 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии за отчетный месяц (год), тыс кВтч всего", tahoma9pt));
+			sheet.mergeCells(2 + x * 3 * 5, 4 + y * 12, 2 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(3 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(3 + x * 3 * 5, 4 + y * 12, 3 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(4 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(4 + x * 3 * 5, 4 + y * 12, 4 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(5 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год), тыс. кВтч всего", tahoma9pt));
+			sheet.mergeCells(5 + x * 3 * 5, 4 + y * 12, 5 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(6 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(6 + x * 3 * 5, 4 + y * 12, 6 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(7 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(7 + x * 3 * 5, 4 + y * 12, 7 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(8 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+			sheet.mergeCells(8 + x * 3 * 5, 4 + y * 12, 10 + x * 3 * 5, 4 + y * 12);
+
+			sheet.addCell(new Label(11 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(11 + x * 3 * 5, 4 + y * 12, 13 + x * 3 * 5, 4 + y * 12);
+
+			sheet.addCell(new Label(14 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(14 + x * 3 * 5, 4 + y * 12, 16 + x * 3 * 5, 4 + y * 12);
+
+			sheet.addCell(new Label(8 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
+			sheet.addCell(new Label(9 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
+			sheet.addCell(new Label(10 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
+
+			sheet.addCell(new Label(11 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
+			sheet.addCell(new Label(12 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
+			sheet.addCell(new Label(13 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
+
+			sheet.addCell(new Label(14 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
+			sheet.addCell(new Label(15 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
+			sheet.addCell(new Label(16 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
+
+			int res_i = 0;
+
+			for (int i = 0; i < 5; i++)
 			{
-				for (int a2 = 1; a2 < 3; a2++)
+				for (int a = 0; a < 6; a++)
 				{
-					sheet.addCell(new Formula(2 + i * 3 + x * 3 * 5 + a2, 6 + y * 12 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					for (int a2 = 1; a2 < 3; a2++)
+					{
+						sheet.addCell(new Formula(2 + i * 3 + x * 3 * 5 + a2, 6 + y * 12 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					}
+
+					sheet.addCell(new Formula(2 + i * 3 + x * 3 * 5, 6 + y * 12 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
 				}
 
-				sheet.addCell(new Formula(2 + i * 3 + x * 3 * 5, 6 + y * 12 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
 			}
+		}
 
+		// Год
+		{
+			int x = 0;
+			int y = 3;
+
+			@SuppressWarnings("rawtypes") Vector<Vector> result = new ConnectionBD().getInfoSbut_nas(name, "год", year, 0, 4);
+
+			sheet.addCell(new Label(2 + x * 3 * 5, 3 + y * 12, "Год", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 3 * 5, 3 + y * 12, 1 + (x + 1) * 3 * 5, 3 + y * 12);
+
+			sheet.addCell(new Label(2 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии за отчетный месяц (год), тыс кВтч всего", tahoma9pt));
+			sheet.mergeCells(2 + x * 3 * 5, 4 + y * 12, 2 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(3 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(3 + x * 3 * 5, 4 + y * 12, 3 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(4 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(4 + x * 3 * 5, 4 + y * 12, 4 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(5 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год), тыс. кВтч всего", tahoma9pt));
+			sheet.mergeCells(5 + x * 3 * 5, 4 + y * 12, 5 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(6 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(6 + x * 3 * 5, 4 + y * 12, 6 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(7 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочному тарифу за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(7 + x * 3 * 5, 4 + y * 12, 7 + x * 3 * 5, 5 + y * 12);
+
+			sheet.addCell(new Label(8 + x * 3 * 5, 4 + y * 12, "Объем электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+			sheet.mergeCells(8 + x * 3 * 5, 4 + y * 12, 10 + x * 3 * 5, 4 + y * 12);
+
+			sheet.addCell(new Label(11 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год) с НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(11 + x * 3 * 5, 4 + y * 12, 13 + x * 3 * 5, 4 + y * 12);
+
+			sheet.addCell(new Label(14 + x * 3 * 5, 4 + y * 12, "Стоимость электрической энергии потребителей, осуществляющих оплату по зонным тарифам за отчетный месяц (год) без НДС, тыс. руб. всего", tahoma9pt));
+			sheet.mergeCells(14 + x * 3 * 5, 4 + y * 12, 16 + x * 3 * 5, 4 + y * 12);
+
+			sheet.addCell(new Label(8 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
+			sheet.addCell(new Label(9 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
+			sheet.addCell(new Label(10 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
+
+			sheet.addCell(new Label(11 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
+			sheet.addCell(new Label(12 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
+			sheet.addCell(new Label(13 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
+
+			sheet.addCell(new Label(14 + x * 3 * 5, 5 + y * 12, "ночь", tahoma9pt));
+			sheet.addCell(new Label(15 + x * 3 * 5, 5 + y * 12, "пик", tahoma9pt));
+			sheet.addCell(new Label(16 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
+
+			int res_i = 0;
+
+			for (int i = 0; i < 5; i++)
+			{
+				for (int a = 0; a < 6; a++)
+				{
+					for (int a2 = 1; a2 < 3; a2++)
+					{
+						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
+
+						if (res.equals(done_num.get(res_i).get(a2)))
+						{
+							sheet.addCell(new Label(2 + i * 3 + x * 3 * 5 + a2, 6 + y * 12 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + i * 3 + x * 3 * 5 + a2, 6 + y * 12 + a, result.get(res_i).get(a2).toString(), tahoma9ptORANGE));
+						}
+					}
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+
+					if (res.equals(done_num.get(res_i).get(0)))
+					{
+						sheet.addCell(new Label(2 + i * 3 + x * 3 * 5, 6 + y * 12 + a, result.get(res_i++).get(0).toString(), tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + i * 3 + x * 3 * 5, 6 + y * 12 + a, result.get(res_i++).get(0).toString(), tahoma9ptRed));
+					}
+				}
+
+			}
 		}
 	}
 
@@ -702,7 +892,11 @@ public class ToExcelSbut
 		sheet.mergeCells(0, 1, 10, 1);
 		sheet.setRowView(1, 750);
 
-		for (int p = 0; p < 2; p++)
+		for (int p = 3; p < 120; p++)
+		{
+			sheet.setRowView(p, 450);
+		}
+		for (int p = 0; p < 4; p++)
 		{
 			sheet.addCell(new Label(0, 3 + p * 25, "Потребители", tahoma9pt));
 			sheet.mergeCells(0, 3 + p * 25, 0, 5 + p * 25);
@@ -749,6 +943,8 @@ public class ToExcelSbut
 			sheet.addCell(new Label(1, 22 + p * 25, "311", tahoma9pt));
 			sheet.addCell(new Label(1, 23 + p * 25, "321", tahoma9pt));
 			sheet.addCell(new Label(1, 24 + p * 25, "491", tahoma9pt));
+
+			sheet.setRowView(4 + p * 25, 850);
 		}
 
 		sheet.setColumnView(0, 50);
@@ -757,23 +953,20 @@ public class ToExcelSbut
 			sheet.setColumnView(p, 15);
 		}
 
-		for (int p = 3; p < 60; p++)
-		{
-			sheet.setRowView(p, 450);
-		}
-		sheet.setRowView(4, 850);
-		sheet.setRowView(29, 850);
-
 		@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+		Vector<Vector<Double>> done_num = new Vector<Vector<Double>>();
 
 		for (int v = 0; v < 19 * 5; v++)
 		{
 			Vector<String> element = new Vector<String>();
+			Vector<Double> el_num = new Vector<Double>();
 			for (int r = 0; r < 6; r++)
 			{
 				element.add("");
+				el_num.add((Double) 0.0);
 			}
 			done.add(element);
+			done_num.add(el_num);
 		}
 
 		for (int p = 0; p < months.length; p++)
@@ -865,61 +1058,139 @@ public class ToExcelSbut
 					{
 						for (int a2 = 1; a2 < 5; a2++)
 						{
+							Double sum = new BigDecimal(done_num.get(res_i).get(a2) + parseStringToDouble(result.get(res_i).get(a2).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+							done_num.get(res_i).set(a2, sum);
 							sheet.addCell(new Label(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, toNumberString(result.get(res_i).get(a2).toString()), tahoma9ptYellow));
 						}
+						Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(0, sum);
 						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, toNumberString(result.get(res_i++).get(0).toString()), tahoma9ptGreen));
 					}
 				}
 			}
 		}
 
-		// год
-
-		int x = 6;
-		int y = 1;
-
-		sheet.addCell(new Label(2 + x * 5 * 5, 3 + y * 25, "Год", tahoma12ptBold));
-		sheet.mergeCells(2 + x * 5 * 5, 3 + y * 25, 1 + (x + 1) * 5 * 5, 3 + y * 25);
-
-		int res_i = 0;
-
-		for (int i = 0; i < 5; i++)
+		// Итог
 		{
-			sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 5 + y * 25, "Всего", tahoma9pt));
+			int x = 0;
+			int y = 2;
 
-			switch (i)
+			sheet.addCell(new Label(2 + x * 5 * 5, 3 + y * 25, "Итог", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 5, 3 + y * 25, 1 + (x + 1) * 5 * 5, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 5; i++)
 			{
-				case 0:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-					break;
-				case 1:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности  за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-				case 2:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
-					break;
-				case 3:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
-					break;
-				case 4:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-			}
-			sheet.mergeCells(2 + i * 5 + x * 5 * 5, 4 + y * 25, 6 + i * 5 + x * 5 * 5, 4 + y * 25);
+				sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 5 + y * 25, "Всего", tahoma9pt));
 
-			sheet.addCell(new Label(3 + i * 5 + x * 5 * 5, 5 + y * 25, "ВН", tahoma9pt));
-			sheet.addCell(new Label(4 + i * 5 + x * 5 * 5, 5 + y * 25, "СН1", tahoma9pt));
-			sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
-			sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
-
-			for (int a = 0; a < 19; a++)
-			{
-				for (int a2 = 1; a2 < 5; a2++)
+				switch (i)
 				{
-					sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности  за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
 				}
+				sheet.mergeCells(2 + i * 5 + x * 5 * 5, 4 + y * 25, 6 + i * 5 + x * 5 * 5, 4 + y * 25);
 
-				sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				sheet.addCell(new Label(3 + i * 5 + x * 5 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 5 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					}
+
+					sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				}
+			}
+		}
+
+		// год
+		{
+			int x = 0;
+			int y = 3;
+
+			@SuppressWarnings("rawtypes") Vector<Vector> result = new ConnectionBD().getInfoSbut(name, "год", year, 6, 10);
+
+			sheet.addCell(new Label(2 + x * 5 * 5, 3 + y * 25, "Год", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 5, 3 + y * 25, 1 + (x + 1) * 5 * 5, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 5; i++)
+			{
+				sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 5 + y * 25, "Всего", tahoma9pt));
+
+				switch (i)
+				{
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности  за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+				}
+				sheet.mergeCells(2 + i * 5 + x * 5 * 5, 4 + y * 25, 6 + i * 5 + x * 5 * 5, 4 + y * 25);
+
+				sheet.addCell(new Label(3 + i * 5 + x * 5 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 5 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
+
+						if (res.equals(done_num.get(res_i).get(a2)))
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptORANGE));
+						}
+					}
+
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+
+					if (res.equals(done_num.get(res_i).get(0)))
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptRed));
+					}
+				}
 			}
 		}
 	}
@@ -931,7 +1202,11 @@ public class ToExcelSbut
 		sheet.mergeCells(0, 1, 10, 1);
 		sheet.setRowView(1, 750);
 
-		for (int p = 0; p < 2; p++)
+		for (int p = 3; p < 120; p++)
+		{
+			sheet.setRowView(p, 450);
+		}
+		for (int p = 0; p < 4; p++)
 		{
 			sheet.addCell(new Label(0, 3 + p * 25, "Потребители", tahoma9pt));
 			sheet.mergeCells(0, 3 + p * 25, 0, 5 + p * 25);
@@ -978,6 +1253,8 @@ public class ToExcelSbut
 			sheet.addCell(new Label(1, 22 + p * 25, "311", tahoma9pt));
 			sheet.addCell(new Label(1, 23 + p * 25, "321", tahoma9pt));
 			sheet.addCell(new Label(1, 24 + p * 25, "491", tahoma9pt));
+
+			sheet.setRowView(4 + p * 25, 850);
 		}
 
 		sheet.setColumnView(0, 50);
@@ -986,23 +1263,20 @@ public class ToExcelSbut
 			sheet.setColumnView(p, 15);
 		}
 
-		for (int p = 3; p < 60; p++)
-		{
-			sheet.setRowView(p, 450);
-		}
-		sheet.setRowView(4, 850);
-		sheet.setRowView(29, 850);
-
 		@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+		Vector<Vector<Double>> done_num = new Vector<Vector<Double>>();
 
 		for (int v = 0; v < 19 * 6; v++)
 		{
 			Vector<String> element = new Vector<String>();
+			Vector<Double> el_num = new Vector<Double>();
 			for (int r = 0; r < 5; r++)
 			{
 				element.add("");
+				el_num.add((Double) 0.0);
 			}
 			done.add(element);
+			done_num.add(el_num);
 		}
 
 		for (int p = 0; p < months.length; p++)
@@ -1097,65 +1371,144 @@ public class ToExcelSbut
 					{
 						for (int a2 = 1; a2 < 5; a2++)
 						{
+							Double sum = new BigDecimal(done_num.get(res_i).get(a2) + parseStringToDouble(result.get(res_i).get(a2).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+							done_num.get(res_i).set(a2, sum);
 							sheet.addCell(new Label(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, toNumberString(result.get(res_i).get(a2).toString()), tahoma9ptYellow));
 						}
 
+						Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(0, sum);
 						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, toNumberString(result.get(res_i++).get(0).toString()), tahoma9ptGreen));
 					}
 				}
 			}
 		}
 
-		// год
-
-		int x = 6;
-		int y = 1;
-
-		sheet.addCell(new Label(2 + x * 5 * 6, 3 + y * 25, "Год", tahoma12ptBold));
-		sheet.mergeCells(2 + x * 5 * 6, 3 + y * 25, 1 + (x + 1) * 5 * 6, 3 + y * 25);
-
-		int res_i = 0;
-
-		for (int i = 0; i < 6; i++)
+		// Итог
 		{
-			sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 5 + y * 25, "Всего", tahoma9pt));
+			int x = 0;
+			int y = 2;
 
-			switch (i)
+			sheet.addCell(new Label(2 + x * 5 * 6, 3 + y * 25, "Итог", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 6, 3 + y * 25, 1 + (x + 1) * 5 * 6, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 6; i++)
 			{
-				case 0:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-					break;
-				case 1:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-				case 2:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-					break;
-				case 3:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-				case 4:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-					break;
-				case 5:
-					sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-			}
-			sheet.mergeCells(2 + i * 5 + x * 6 * 5, 4 + y * 25, 6 + i * 5 + x * 6 * 5, 4 + y * 25);
+				sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 5 + y * 25, "Всего", tahoma9pt));
 
-			sheet.addCell(new Label(3 + i * 5 + x * 6 * 5, 5 + y * 25, "ВН", tahoma9pt));
-			sheet.addCell(new Label(4 + i * 5 + x * 6 * 5, 5 + y * 25, "СН1", tahoma9pt));
-			sheet.addCell(new Label(5 + i * 5 + x * 6 * 5, 5 + y * 25, "СН2", tahoma9pt));
-			sheet.addCell(new Label(6 + i * 5 + x * 6 * 5, 5 + y * 25, "НН", tahoma9pt));
-
-			for (int a = 0; a < 19; a++)
-			{
-				for (int a2 = 1; a2 < 5; a2++)
+				switch (i)
 				{
-					sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 5:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
 				}
+				sheet.mergeCells(2 + i * 5 + x * 6 * 5, 4 + y * 25, 6 + i * 5 + x * 6 * 5, 4 + y * 25);
 
-				sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				sheet.addCell(new Label(3 + i * 5 + x * 6 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 6 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 6 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 6 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					}
+
+					sheet.addCell(new Formula(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				}
+			}
+		}
+
+		// год
+		{
+			int x = 0;
+			int y = 3;
+
+			@SuppressWarnings("rawtypes") Vector<Vector> result = new ConnectionBD().getInfoSbut(name, "год", year, 11, 16);
+
+			sheet.addCell(new Label(2 + x * 5 * 6, 3 + y * 25, "Год", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 6, 3 + y * 25, 1 + (x + 1) * 5 * 6, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 6; i++)
+			{
+				sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 5 + y * 25, "Всего", tahoma9pt));
+
+				switch (i)
+				{
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Объем электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+						break;
+					case 5:
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 4 + y * 25, "Стоимость электрической энергии потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+				}
+				sheet.mergeCells(2 + i * 5 + x * 6 * 5, 4 + y * 25, 6 + i * 5 + x * 6 * 5, 4 + y * 25);
+
+				sheet.addCell(new Label(3 + i * 5 + x * 6 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 6 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 6 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 6 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
+
+						if (res.equals(done_num.get(res_i).get(a2)))
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptORANGE));
+						}
+					}
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+					if (res.equals(done_num.get(res_i).get(0)))
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptRed));
+					}
+				}
 			}
 		}
 	}
@@ -1167,7 +1520,11 @@ public class ToExcelSbut
 		sheet.mergeCells(0, 1, 10, 1);
 		sheet.setRowView(1, 750);
 
-		for (int p = 0; p < 2; p++)
+		for (int p = 3; p < 120; p++)
+		{
+			sheet.setRowView(p, 450);
+		}
+		for (int p = 0; p < 4; p++)
 		{
 			sheet.addCell(new Label(0, 3 + p * 25, "Потребители", tahoma9pt));
 			sheet.mergeCells(0, 3 + p * 25, 0, 5 + p * 25);
@@ -1214,6 +1571,8 @@ public class ToExcelSbut
 			sheet.addCell(new Label(1, 22 + p * 25, "311", tahoma9pt));
 			sheet.addCell(new Label(1, 23 + p * 25, "321", tahoma9pt));
 			sheet.addCell(new Label(1, 24 + p * 25, "491", tahoma9pt));
+
+			sheet.setRowView(4 + p * 25, 850);
 		}
 
 		sheet.setColumnView(0, 50);
@@ -1222,23 +1581,20 @@ public class ToExcelSbut
 			sheet.setColumnView(p, 15);
 		}
 
-		for (int p = 3; p < 60; p++)
-		{
-			sheet.setRowView(p, 450);
-		}
-		sheet.setRowView(4, 850);
-		sheet.setRowView(29, 850);
-
 		@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+		Vector<Vector<Double>> done_num = new Vector<Vector<Double>>();
 
 		for (int v = 0; v < 19 * 5; v++)
 		{
 			Vector<String> element = new Vector<String>();
+			Vector<Double> el_num = new Vector<Double>();
 			for (int r = 0; r < 6; r++)
 			{
 				element.add("");
+				el_num.add((Double) 0.0);
 			}
 			done.add(element);
+			done_num.add(el_num);
 		}
 
 		for (int p = 0; p < months.length; p++)
@@ -1330,62 +1686,140 @@ public class ToExcelSbut
 					{
 						for (int a2 = 1; a2 < 5; a2++)
 						{
+							Double sum = new BigDecimal(done_num.get(res_i).get(a2) + parseStringToDouble(result.get(res_i).get(a2).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+							done_num.get(res_i).set(a2, sum);
 							sheet.addCell(new Label(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, toNumberString(result.get(res_i).get(a2).toString()), tahoma9ptYellow));
 						}
 
+						Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(0, sum);
 						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, toNumberString(result.get(res_i++).get(0).toString()), tahoma9ptGreen));
 					}
 				}
 			}
 		}
 
-		// год
-
-		int x = 6;
-		int y = 1;
-
-		sheet.addCell(new Label(2 + x * 5 * 5, 3 + y * 25, "Год", tahoma12ptBold));
-		sheet.mergeCells(2 + x * 5 * 5, 3 + y * 25, 1 + (x + 1) * 5 * 5, 3 + y * 25);
-
-		int res_i = 0;
-
-		for (int i = 0; i < 5; i++)
+		// Итог
 		{
-			sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 5 + y * 25, "Всего", tahoma9pt));
+			int x = 0;
+			int y = 2;
 
-			switch (i)
+			sheet.addCell(new Label(2 + x * 5 * 5, 3 + y * 25, "Итог", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 5, 3 + y * 25, 1 + (x + 1) * 5 * 5, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 5; i++)
 			{
-				case 0:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности за отчетный месяц (год), мВт", tahoma9pt));
-					break;
-				case 1:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности  за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-				case 2:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
-					break;
-				case 3:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
-					break;
-				case 4:
-					sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
-					break;
-			}
-			sheet.mergeCells(2 + i * 5 + x * 5 * 5, 4 + y * 25, 6 + i * 5 + x * 5 * 5, 4 + y * 25);
+				sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 5 + y * 25, "Всего", tahoma9pt));
 
-			sheet.addCell(new Label(3 + i * 5 + x * 5 * 5, 5 + y * 25, "ВН", tahoma9pt));
-			sheet.addCell(new Label(4 + i * 5 + x * 5 * 5, 5 + y * 25, "СН1", tahoma9pt));
-			sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
-			sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
-
-			for (int a = 0; a < 19; a++)
-			{
-				for (int a2 = 1; a2 < 5; a2++)
+				switch (i)
 				{
-					sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности  за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
 				}
-				
-				sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				sheet.mergeCells(2 + i * 5 + x * 5 * 5, 4 + y * 25, 6 + i * 5 + x * 5 * 5, 4 + y * 25);
+
+				sheet.addCell(new Label(3 + i * 5 + x * 5 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 5 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					}
+
+					sheet.addCell(new Formula(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				}
+			}
+		}
+
+		// год
+		{
+			int x = 0;
+			int y = 3;
+
+			@SuppressWarnings("rawtypes") Vector<Vector> result = new ConnectionBD().getInfoSbut(name, "год", year, 6, 10);
+
+			sheet.addCell(new Label(2 + x * 5 * 5, 3 + y * 25, "Год", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5 * 5, 3 + y * 25, 1 + (x + 1) * 5 * 5, 3 + y * 25);
+
+			int res_i = 0;
+
+			for (int i = 0; i < 5; i++)
+			{
+				sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 5 + y * 25, "Всего", tahoma9pt));
+
+				switch (i)
+				{
+					case 0:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 1:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности  за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+					case 2:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по одноставочным и зонным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 3:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Объем электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год), мВт", tahoma9pt));
+						break;
+					case 4:
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 4 + y * 25, "Стоимость электрической мощности потребителей, осуществляющих оплату по двухставочным тарифам (ценам) за отчетный месяц (год) без НДС, тыс. руб.", tahoma9pt));
+						break;
+				}
+				sheet.mergeCells(2 + i * 5 + x * 5 * 5, 4 + y * 25, 6 + i * 5 + x * 5 * 5, 4 + y * 25);
+
+				sheet.addCell(new Label(3 + i * 5 + x * 5 * 5, 5 + y * 25, "ВН", tahoma9pt));
+				sheet.addCell(new Label(4 + i * 5 + x * 5 * 5, 5 + y * 25, "СН1", tahoma9pt));
+				sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
+				sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
+
+				for (int a = 0; a < 19; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
+
+						if (res.equals(done_num.get(res_i).get(a2)))
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + i * 5 + x * 5 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptORANGE));
+						}
+					}
+					// ВН
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+
+					if (res.equals(done_num.get(res_i).get(0)))
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + i * 5 + x * 5 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptRed));
+					}
+				}
 			}
 		}
 	}
@@ -1397,7 +1831,12 @@ public class ToExcelSbut
 		sheet.mergeCells(0, 1, 10, 1);
 		sheet.setRowView(1, 750);
 
-		for (int p = 0; p < 2; p++)
+		for (int p = 3; p < 90; p++)
+		{
+			sheet.setRowView(p, 450);
+		}
+
+		for (int p = 0; p < 3; p++)
 		{
 			sheet.addCell(new Label(0, 4 + p * 20, "Потребители", tahoma9pt));
 
@@ -1439,6 +1878,7 @@ public class ToExcelSbut
 			sheet.addCell(new Label(1, 20 + p * 20, "600", tahoma9pt));
 			sheet.addCell(new Label(1, 21 + p * 20, "700", tahoma9pt));
 
+			sheet.setRowView(4 + p * 20, 1500);
 		}
 
 		sheet.setColumnView(0, 50);
@@ -1447,24 +1887,20 @@ public class ToExcelSbut
 			sheet.setColumnView(p, 15);
 		}
 
-		for (int p = 3; p < 43; p++)
-		{
-			sheet.setRowView(p, 450);
-		}
-
-		sheet.setRowView(4, 1500);
-		sheet.setRowView(24, 1500);
-
 		@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+		Vector<Vector<Double>> done_num = new Vector<Vector<Double>>();
 
 		for (int v = 0; v < 17; v++)
 		{
 			Vector<String> element = new Vector<String>();
+			Vector<Double> el_num = new Vector<Double>();
 			for (int r = 0; r < 5; r++)
 			{
 				element.add("");
+				el_num.add((Double) 0.0);
 			}
 			done.add(element);
+			done_num.add(el_num);
 		}
 
 		for (int p = 0; p < months.length; p++)
@@ -1534,43 +1970,106 @@ public class ToExcelSbut
 				{
 					for (int a2 = 1; a2 < 5; a2++)
 					{
+						Double sum = new BigDecimal(done_num.get(res_i).get(a2) + parseStringToDouble(result.get(res_i).get(a2).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(a2, sum);
 						sheet.addCell(new Label(2 + x * 5 + a2, 5 + y * 20 + a, toNumberString(result.get(res_i).get(a2).toString()), tahoma9ptYellow));
 					}
+					Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+					done_num.get(res_i).set(0, sum);
 					sheet.addCell(new Label(2 + x * 5, 5 + y * 20 + a, toNumberString(result.get(res_i++).get(0).toString()), tahoma9ptGreen));
 				}
 			}
 		}
 
-		// год
-
-		int x = 6;
-		int y = 1;
-
-		sheet.addCell(new Label(2 + x * 5, 3 + y * 20, "Год", tahoma12ptBold));
-		sheet.mergeCells(2 + x * 5, 3 + y * 20, 1 + (x + 1) * 5, 3 + y * 20);
-
-		sheet.addCell(new Label(2 + x * 5, 4 + y * 20, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-
-		sheet.addCell(new Label(3 + x * 5, 4 + y * 20, "Стоимость электрической энергии за отчетный месяц (год), тыс. руб.", tahoma9pt));
-
-		sheet.addCell(new Label(4 + x * 5, 4 + y * 20, "Величина электрической мощности за отчетный месяц (в среднем за год), МВт", tahoma9pt));
-
-		sheet.addCell(new Label(5 + x * 5, 4 + y * 20, "Стоимость электрической мощности за отчетный месяц (год), тыс. руб.", tahoma9pt));
-
-		sheet.addCell(new Label(6 + x * 5, 4 + y * 20, "Стоимость без дифференциации на энергию и мощность за отчетный месяц (год), тыс. руб.", tahoma9pt));
-
-		int res_i = 0;
-
-		if (done.size() > 0)
+		// Итог
 		{
-			for (int a = 0; a < 17; a++)
-			{
-				for (int a2 = 1; a2 < 5; a2++)
-				{
-					sheet.addCell(new Formula(2 + x * 5 + a2, 5 + y * 20 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
-				}
+			int x = 0;
+			int y = 2;
 
-				sheet.addCell(new Formula(2 + x * 5, 5 + y * 20 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+			sheet.addCell(new Label(2 + x * 5, 3 + y * 20, "Итог", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5, 3 + y * 20, 1 + (x + 1) * 5, 3 + y * 20);
+
+			sheet.addCell(new Label(2 + x * 5, 4 + y * 20, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+
+			sheet.addCell(new Label(3 + x * 5, 4 + y * 20, "Стоимость электрической энергии за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(4 + x * 5, 4 + y * 20, "Величина электрической мощности за отчетный месяц (в среднем за год), МВт", tahoma9pt));
+
+			sheet.addCell(new Label(5 + x * 5, 4 + y * 20, "Стоимость электрической мощности за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(6 + x * 5, 4 + y * 20, "Стоимость без дифференциации на энергию и мощность за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			int res_i = 0;
+
+			if (done.size() > 0)
+			{
+				for (int a = 0; a < 17; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						sheet.addCell(new Formula(2 + x * 5 + a2, 5 + y * 20 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					}
+
+					sheet.addCell(new Formula(2 + x * 5, 5 + y * 20 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				}
+			}
+		}
+
+		// год
+		{
+			int x = 1;
+			int y = 2;
+
+			@SuppressWarnings("rawtypes") Vector<Vector> result = new ConnectionBD().getInfoSbut_sell(name, "год", year);
+
+			sheet.addCell(new Label(2 + x * 5, 3 + y * 20, "Год", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5, 3 + y * 20, 1 + (x + 1) * 5, 3 + y * 20);
+
+			sheet.addCell(new Label(2 + x * 5, 4 + y * 20, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+
+			sheet.addCell(new Label(3 + x * 5, 4 + y * 20, "Стоимость электрической энергии за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(4 + x * 5, 4 + y * 20, "Величина электрической мощности за отчетный месяц (в среднем за год), МВт", tahoma9pt));
+
+			sheet.addCell(new Label(5 + x * 5, 4 + y * 20, "Стоимость электрической мощности за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(6 + x * 5, 4 + y * 20, "Стоимость без дифференциации на энергию и мощность за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			int res_i = 0;
+
+			if (done.size() > 0)
+			{
+				for (int a = 0; a < 17; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
+
+						if (res.equals(done_num.get(res_i).get(a2)))
+						{
+							sheet.addCell(new Label(2 + x * 5 + a2, 5 + y * 20 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + x * 5 + a2, 5 + y * 20 + a, result.get(res_i).get(a2).toString(), tahoma9ptORANGE));
+						}
+					}
+
+					// ВН
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+
+					if (res.equals(done_num.get(res_i).get(0)))
+					{
+						sheet.addCell(new Label(2 + x * 5, 5 + y * 20 + a, result.get(res_i++).get(0).toString(), tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + x * 5, 5 + y * 20 + a, result.get(res_i++).get(0).toString(), tahoma9ptRed));
+					}
+
+				}
 			}
 		}
 	}
@@ -1582,7 +2081,12 @@ public class ToExcelSbut
 		sheet.mergeCells(0, 1, 10, 1);
 		sheet.setRowView(1, 750);
 
-		for (int p = 0; p < 2; p++)
+		for (int p = 3; p < 90; p++)
+		{
+			sheet.setRowView(p, 450);
+		}
+
+		for (int p = 0; p < 3; p++)
 		{
 			sheet.addCell(new Label(0, 4 + p * 20, "Потребители", tahoma9pt));
 
@@ -1617,6 +2121,8 @@ public class ToExcelSbut
 			sheet.addCell(new Label(1, 16 + p * 20, "111", tahoma9pt));
 			sheet.addCell(new Label(1, 17 + p * 20, "112", tahoma9pt));
 			sheet.addCell(new Label(1, 18 + p * 20, "200", tahoma9pt));
+
+			sheet.setRowView(4 + p * 20, 1500);
 		}
 
 		sheet.setColumnView(0, 50);
@@ -1625,24 +2131,20 @@ public class ToExcelSbut
 			sheet.setColumnView(p, 15);
 		}
 
-		for (int p = 3; p < 43; p++)
-		{
-			sheet.setRowView(p, 450);
-		}
-
-		sheet.setRowView(4, 1500);
-		sheet.setRowView(24, 1500);
-
 		@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+		Vector<Vector<Double>> done_num = new Vector<Vector<Double>>();
 
 		for (int v = 0; v < 14; v++)
 		{
 			Vector<String> element = new Vector<String>();
+			Vector<Double> el_num = new Vector<Double>();
 			for (int r = 0; r < 5; r++)
 			{
 				element.add("");
+				el_num.add((Double) 0.0);
 			}
 			done.add(element);
+			done_num.add(el_num);
 		}
 
 		for (int p = 0; p < months.length; p++)
@@ -1712,43 +2214,106 @@ public class ToExcelSbut
 				{
 					for (int a2 = 1; a2 < 5; a2++)
 					{
+						Double sum = new BigDecimal(done_num.get(res_i).get(a2) + parseStringToDouble(result.get(res_i).get(a2).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(a2, sum);
 						sheet.addCell(new Label(2 + x * 5 + a2, 5 + y * 20 + a, toNumberString(result.get(res_i).get(a2).toString()), tahoma9ptYellow));
 					}
+					Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+					done_num.get(res_i).set(0, sum);
 					sheet.addCell(new Label(2 + x * 5, 5 + y * 20 + a, toNumberString(result.get(res_i++).get(0).toString()), tahoma9ptGreen));
 				}
 			}
 		}
 
-		// год
-
-		int x = 6;
-		int y = 1;
-
-		sheet.addCell(new Label(2 + x * 5, 3 + y * 20, "Год", tahoma12ptBold));
-		sheet.mergeCells(2 + x * 5, 3 + y * 20, 1 + (x + 1) * 5, 3 + y * 20);
-
-		sheet.addCell(new Label(2 + x * 5, 4 + y * 20, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
-
-		sheet.addCell(new Label(3 + x * 5, 4 + y * 20, "Стоимость электрической энергии за отчетный месяц (год), тыс. руб.", tahoma9pt));
-
-		sheet.addCell(new Label(4 + x * 5, 4 + y * 20, "Величина электрической мощности за отчетный месяц (в среднем за год), МВт", tahoma9pt));
-
-		sheet.addCell(new Label(5 + x * 5, 4 + y * 20, "Стоимость электрической мощности за отчетный месяц (год), тыс. руб.", tahoma9pt));
-
-		sheet.addCell(new Label(6 + x * 5, 4 + y * 20, "Стоимость без дифференциации на энергию и мощность за отчетный месяц (год), тыс. руб.", tahoma9pt));
-
-		int res_i = 0;
-
-		if (done.size() > 0)
+		// Итог
 		{
-			for (int a = 0; a < 14; a++)
-			{
-				for (int a2 = 1; a2 < 5; a2++)
-				{
-					sheet.addCell(new Formula(2 + x * 5 + a2, 5 + y * 20 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
-				}
+			int x = 0;
+			int y = 2;
 
-				sheet.addCell(new Formula(2 + x * 5, 5 + y * 20 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+			sheet.addCell(new Label(2 + x * 5, 3 + y * 20, "Итог", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5, 3 + y * 20, 1 + (x + 1) * 5, 3 + y * 20);
+
+			sheet.addCell(new Label(2 + x * 5, 4 + y * 20, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+
+			sheet.addCell(new Label(3 + x * 5, 4 + y * 20, "Стоимость электрической энергии за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(4 + x * 5, 4 + y * 20, "Величина электрической мощности за отчетный месяц (в среднем за год), МВт", tahoma9pt));
+
+			sheet.addCell(new Label(5 + x * 5, 4 + y * 20, "Стоимость электрической мощности за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(6 + x * 5, 4 + y * 20, "Стоимость без дифференциации на энергию и мощность за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			int res_i = 0;
+
+			if (done.size() > 0)
+			{
+				for (int a = 0; a < 14; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						sheet.addCell(new Formula(2 + x * 5 + a2, 5 + y * 20 + a, "SUM(" + done.get(res_i).get(a2).toString() + ")", tahoma9ptYellow));
+					}
+
+					sheet.addCell(new Formula(2 + x * 5, 5 + y * 20 + a, "SUM(" + done.get(res_i++).get(0).toString() + ")", tahoma9ptGreen));
+				}
+			}
+		}
+
+		// год
+		{
+			int x = 1;
+			int y = 2;
+			
+			@SuppressWarnings("rawtypes")
+			Vector<Vector> result = new ConnectionBD().getInfoSbut_buy(name, "год", year);
+			
+			sheet.addCell(new Label(2 + x * 5, 3 + y * 20, "Год", tahoma12ptBold));
+			sheet.mergeCells(2 + x * 5, 3 + y * 20, 1 + (x + 1) * 5, 3 + y * 20);
+
+			sheet.addCell(new Label(2 + x * 5, 4 + y * 20, "Объем электрической энергии за отчетный месяц (год), тыс. кВтч", tahoma9pt));
+
+			sheet.addCell(new Label(3 + x * 5, 4 + y * 20, "Стоимость электрической энергии за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(4 + x * 5, 4 + y * 20, "Величина электрической мощности за отчетный месяц (в среднем за год), МВт", tahoma9pt));
+
+			sheet.addCell(new Label(5 + x * 5, 4 + y * 20, "Стоимость электрической мощности за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			sheet.addCell(new Label(6 + x * 5, 4 + y * 20, "Стоимость без дифференциации на энергию и мощность за отчетный месяц (год), тыс. руб.", tahoma9pt));
+
+			int res_i = 0;
+
+			if (done.size() > 0)
+			{
+				for (int a = 0; a < 14; a++)
+				{
+					for (int a2 = 1; a2 < 5; a2++)
+					{
+						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
+
+						if (res.equals(done_num.get(res_i).get(a2)))
+						{
+							sheet.addCell(new Label(2 + x * 5 + a2, 5 + y * 20 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + x * 5 + a2, 5 + y * 20 + a, result.get(res_i).get(a2).toString(), tahoma9ptORANGE));
+						}
+					}
+
+					// ВН
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+
+					if (res.equals(done_num.get(res_i).get(0)))
+					{
+						sheet.addCell(new Label(2 + x * 5, 5 + y * 20 + a, result.get(res_i++).get(0).toString() , tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + x * 5, 5 + y * 20 + a, result.get(res_i++).get(0).toString() , tahoma9ptRed));
+					}
+				}
 			}
 		}
 	}
@@ -1806,5 +2371,25 @@ public class ToExcelSbut
 		}
 		// пустая строка, то возвращаем пустую строку
 		return "";
+	}
+
+	private Double parseStringToDouble(String value)
+	{
+		if (value != null)
+		{
+			value = value.replace(" ", "");
+			value = value.replace(",", ".");
+
+			try
+			{
+				return Double.parseDouble(value);
+			}
+			catch (Exception e)
+			{
+				return 0.0;
+			}
+		}
+
+		return 0.0;
 	}
 }

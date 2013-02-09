@@ -13,5 +13,4 @@ public class Run
 		Main win = new Main();
 		win.setVisible(true);
 	}
-
 }
