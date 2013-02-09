@@ -2,6 +2,8 @@ package output;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -28,7 +30,6 @@ import jxl.write.WriteException;
 
 public class ToExcelSetev
 {
-	@SuppressWarnings("unchecked")
 	public ToExcelSetev(String year)
 	{
 		WorkbookSettings ws = new WorkbookSettings();
@@ -48,7 +49,6 @@ public class ToExcelSetev
 
 				/*
 				 * Основной формат ячеек
-				 * 
 				 * Tahoma 9pt, no bold
 				 * выравнивание по горизонтале: центр
 				 * выравнивание по вертикале: центр
@@ -64,7 +64,6 @@ public class ToExcelSetev
 
 				/*
 				 * формат ячеек зелёного цвета
-				 * 
 				 * Tahoma 9pt, no bold
 				 * выравнивание по горизонтале: по правому краю
 				 * выравнивание по вертикале: центр
@@ -78,10 +77,23 @@ public class ToExcelSetev
 				tahoma9ptGreen.setWrap(true);
 				tahoma9ptGreen.setBorder(Border.ALL, BorderLineStyle.MEDIUM);
 				tahoma9ptGreen.setBackground(Colour.LIGHT_GREEN);
+				
+				WritableCellFormat tahoma9ptRed = new WritableCellFormat(new WritableFont(WritableFont.TAHOMA, 9, WritableFont.NO_BOLD));
+				tahoma9ptRed.setAlignment(Alignment.RIGHT);
+				tahoma9ptRed.setVerticalAlignment(VerticalAlignment.CENTRE);
+				tahoma9ptRed.setWrap(true);
+				tahoma9ptRed.setBorder(Border.ALL, BorderLineStyle.MEDIUM);
+				tahoma9ptRed.setBackground(Colour.RED);
+				
+				WritableCellFormat tahoma9ptORANGE = new WritableCellFormat(new WritableFont(WritableFont.TAHOMA, 9, WritableFont.NO_BOLD));
+				tahoma9ptORANGE.setAlignment(Alignment.RIGHT);
+				tahoma9ptORANGE.setVerticalAlignment(VerticalAlignment.CENTRE);
+				tahoma9ptORANGE.setWrap(true);
+				tahoma9ptORANGE.setBorder(Border.ALL, BorderLineStyle.MEDIUM);
+				tahoma9ptORANGE.setBackground(Colour.LIGHT_ORANGE);
 
 				/*
 				 * формат ячеек жёлтого цвета
-				 * 
 				 * Tahoma 9pt, no bold
 				 * выравнивание по горизонтале: по правому краю
 				 * выравнивание по вертикале: центр
@@ -98,7 +110,6 @@ public class ToExcelSetev
 
 				/*
 				 * Основной с выравниванием по левому краю
-				 * 
 				 * Tahoma 9pt, no bold
 				 * выравнивание по горизонтале: по левому краю
 				 * выравнивание по вертикале: центр
@@ -114,7 +125,6 @@ public class ToExcelSetev
 
 				/*
 				 * Основной с выравниванием по центру без рамки
-				 * 
 				 * Tahoma 9pt, no bold
 				 * выравнивание по горизонтале: центр
 				 * выравнивание по вертикале: центр
@@ -130,7 +140,6 @@ public class ToExcelSetev
 
 				/*
 				 * Основной с выравниванием по центру без рамки
-				 * 
 				 * Tahoma 9pt, no bold
 				 * выравнивание по горизонтале: центр
 				 * выравнивание по вертикале: центр
@@ -146,7 +155,6 @@ public class ToExcelSetev
 
 				/*
 				 * Основной жирный c серым оттенком, по левому краю
-				 * 
 				 * Tahoma 9pt, bold
 				 * выравнивание по горизонтале: по левому краю
 				 * выравнивание по вертикале: центр
@@ -186,7 +194,7 @@ public class ToExcelSetev
 					sheet.addCell(new Label(1, 5 + p * 52, "Код строки", tahoma9pt));
 
 					sheet.addCell(new Label(0, 6 + p * 52, "Электроэнергия (тыс. кВт•ч)", tahoma9ptLeftBoldGray));
-					sheet.mergeCells(0, 6 + p * 52, 31, 6 + p * 52);
+					sheet.mergeCells(0, 6 + p * 52, 31 + p * 10, 6 + p * 52);
 
 					sheet.addCell(new Label(0, 7 + p * 52, "Поступление в сеть из других организаций, в том числе: ", tahoma9ptLeft));
 					sheet.addCell(new Label(0, 8 + p * 52, "  - из сетей ФСК", tahoma9ptLeft));
@@ -209,7 +217,7 @@ public class ToExcelSetev
 					sheet.addCell(new Label(0, 25 + p * 52, "Небаланс", tahoma9ptLeft));
 
 					sheet.addCell(new Label(0, 26 + p * 52, "Мощность (МВт) <*>", tahoma9ptLeftBoldGray));
-					sheet.mergeCells(0, 26 + p * 52, 31, 26 + p * 52);
+					sheet.mergeCells(0, 26 + p * 52, 31 + p * 10, 26 + p * 52);
 
 					sheet.addCell(new Label(0, 27 + p * 52, "Поступление в сеть из других организаций, в том числе: ", tahoma9ptLeft));
 					sheet.addCell(new Label(0, 28 + p * 52, "  - из сетей ФСК", tahoma9ptLeft));
@@ -232,13 +240,13 @@ public class ToExcelSetev
 					sheet.addCell(new Label(0, 45 + p * 52, "Небаланс", tahoma9ptLeft));
 
 					sheet.addCell(new Label(0, 46 + p * 52, "Заявленная и присоединенная мощность (МВт)", tahoma9ptLeftBoldGray));
-					sheet.mergeCells(0, 46 + p * 52, 31, 46 + p * 52);
+					sheet.mergeCells(0, 46 + p * 52, 31 + p * 10, 46 + p * 52);
 
 					sheet.addCell(new Label(0, 47 + p * 52, "Заявленная мощность конечных потребителей ", tahoma9ptLeft));
 					sheet.addCell(new Label(0, 48 + p * 52, "Присоединенная мощность конечных потребителей", tahoma9ptLeft));
 
 					sheet.addCell(new Label(0, 49 + p * 52, "Платежи, тыс. руб.", tahoma9ptLeftBoldGray));
-					sheet.mergeCells(0, 49 + p * 52, 31, 49 + p * 52);
+					sheet.mergeCells(0, 49 + p * 52, 31 + p * 10, 49 + p * 52);
 
 					sheet.addCell(new Label(0, 50 + p * 52, "Стоимость поставленных организацией услуг по передаче услуг по передаче", tahoma9ptLeft));
 					sheet.addCell(new Label(0, 51 + p * 52, "Стоимость приобретенных организацией услуг по передаче", tahoma9ptLeft));
@@ -305,7 +313,7 @@ public class ToExcelSetev
 					sheet.setRowView(p, 450);
 				}
 
-				for (int p = 2; p < 5 * 7 + 2; p++)
+				for (int p = 2; p < 5 * 8 + 2; p++)
 				{
 					sheet.setColumnView(p, 15);
 				}
@@ -314,16 +322,20 @@ public class ToExcelSetev
 
 				String[] months = { "январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь" };
 
-				@SuppressWarnings("rawtypes") Vector<Vector> done = new Vector<Vector>();
+				Vector<Vector<String>> done = new Vector<Vector<String>>(44, 1);
+				Vector<Vector<Double>> done_num = new Vector<Vector<Double>>(44, 1);
 
 				for (int v = 0; v < 44; v++)
 				{
-					Vector<String> element = new Vector<String>();
+					Vector<String> element = new Vector<String>(5);
+					Vector<Double> el_num = new Vector<Double>(5);
 					for (int r = 0; r < 5; r++)
 					{
 						element.add("");
+						el_num.add((Double) 0.0);
 					}
 					done.add(element);
+					done_num.add(el_num);
 				}
 
 				for (int p = 0; p < months.length; p++)
@@ -400,10 +412,17 @@ public class ToExcelSetev
 						// "Всего"
 						sheet.addCell(new Label(2 + x * 5, 7 + res_i + add_y + y * 52, toNumberString(result.get(res_i).get(0).toString()), tahoma9ptGreen));
 
+						Double sum = new BigDecimal(done_num.get(res_i).get(0) + parseStringToDouble(result.get(res_i).get(0).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+
+						done_num.get(res_i).set(0, sum);
+
 						for (int res_p = 1; res_p < result.get(res_i).size(); res_p++)
 						{
 							// остальные
 							sheet.addCell(new Label(2 + res_p + x * 5, 7 + res_i + add_y + y * 52, toNumberString(result.get(res_i).get(res_p).toString()), tahoma9ptYellow));
+
+							sum = new BigDecimal(done_num.get(res_i).get(res_p) + parseStringToDouble(result.get(res_i).get(res_p).toString())).setScale(4, RoundingMode.HALF_UP).doubleValue();
+							done_num.get(res_i).set(res_p, sum);
 						}
 					}
 				}
@@ -412,7 +431,47 @@ public class ToExcelSetev
 				 * Итог
 				 */
 
-				int x = 6;
+				{
+					int x = 6;
+					int y = 1;
+					int add_y = 0;
+
+					sheet.addCell(new Label(2 + x * 5, 5 + y * 52, "Всего", tahoma9pt));
+					sheet.addCell(new Label(3 + x * 5, 5 + y * 52, "ВН", tahoma9pt));
+					sheet.addCell(new Label(4 + x * 5, 5 + y * 52, "СН1", tahoma9pt));
+					sheet.addCell(new Label(5 + x * 5, 5 + y * 52, "СН2", tahoma9pt));
+					sheet.addCell(new Label(6 + x * 5, 5 + y * 52, "НН", tahoma9pt));
+					sheet.addCell(new Label(2 + x * 5, 4 + y * 52, "Итог", tahoma12ptBold));
+
+					sheet.mergeCells(2 + x * 5, 4 + y * 52, 6 + x * 5, 4 + y * 52);
+
+					for (int res_i = 0; res_i < done.size(); res_i++)
+					{
+						if (res_i == 19 || res_i == 38 || res_i == 40)
+						{
+							// пропуск строки
+							add_y++;
+						}
+
+						// всего
+						sheet.addCell(new Formula(2 + x * 5, 7 + res_i + add_y + y * 52, "SUM(" + done.get(res_i).get(0).toString() + ")", tahoma9ptGreen));
+
+						for (int res_p = 1; res_p < done.get(res_i).size(); res_p++)
+						{
+							// остальные
+							sheet.addCell(new Formula(2 + res_p + x * 5, 7 + res_i + add_y + y * 52, "SUM(" + done.get(res_i).get(res_p).toString() + ")", tahoma9ptYellow));
+						}
+					}
+				}
+
+				/*
+				 * ГОД
+				 */
+				
+				@SuppressWarnings({ "rawtypes" })
+				Vector<Vector> result = new ConnectionBD().getInfo(inn.get(i).toString(), "год", year);
+				
+				int x = 7;
 				int y = 1;
 				int add_y = 0;
 
@@ -421,7 +480,7 @@ public class ToExcelSetev
 				sheet.addCell(new Label(4 + x * 5, 5 + y * 52, "СН1", tahoma9pt));
 				sheet.addCell(new Label(5 + x * 5, 5 + y * 52, "СН2", tahoma9pt));
 				sheet.addCell(new Label(6 + x * 5, 5 + y * 52, "НН", tahoma9pt));
-				sheet.addCell(new Label(2 + x * 5, 4 + y * 52, "Итог", tahoma12ptBold));
+				sheet.addCell(new Label(2 + x * 5, 4 + y * 52, "Год", tahoma12ptBold));
 
 				sheet.mergeCells(2 + x * 5, 4 + y * 52, 6 + x * 5, 4 + y * 52);
 
@@ -432,14 +491,32 @@ public class ToExcelSetev
 						// пропуск строки
 						add_y++;
 					}
+					
+					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
 
-					// всего
-					sheet.addCell(new Formula(2 + x * 5, 7 + res_i + add_y + y * 52, "SUM(" + done.get(res_i).get(0).toString() + ")", tahoma9ptGreen));
-
+					if(res.equals(done_num.get(res_i).get(0)))
+					{
+						// всего
+						sheet.addCell(new Label(2 + x * 5, 7 + res_i + add_y + y * 52, toNumberString(result.get(res_i).get(0).toString()), tahoma9ptGreen));
+					}
+					else
+					{
+						sheet.addCell(new Label(2 + x * 5, 7 + res_i + add_y + y * 52, toNumberString(result.get(res_i).get(0).toString()), tahoma9ptRed));
+					}
+					
 					for (int res_p = 1; res_p < done.get(res_i).size(); res_p++)
 					{
-						// остальные
-						sheet.addCell(new Formula(2 + res_p + x * 5, 7 + res_i + add_y + y * 52, "SUM(" + done.get(res_i).get(res_p).toString() + ")", tahoma9ptYellow));
+						res = parseStringToDouble(result.get(res_i).get(res_p).toString());
+						
+						if(res.equals(done_num.get(res_i).get(res_p)))
+						{
+							// остальные
+							sheet.addCell(new Label(2 + res_p + x * 5, 7 + res_i + add_y + y * 52, toNumberString(result.get(res_i).get(res_p).toString()), tahoma9ptYellow));
+						}
+						else
+						{
+							sheet.addCell(new Label(2 + res_p + x * 5, 7 + res_i + add_y + y * 52, toNumberString(result.get(res_i).get(res_p).toString()), tahoma9ptORANGE));
+						}
 					}
 				}
 
@@ -464,7 +541,8 @@ public class ToExcelSetev
 	/**
 	 * Вычисляет символьное представления индекса колонки
 	 * 
-	 * @param value - цифровой индекс колонки(33)
+	 * @param value
+	 *            - цифровой индекс колонки(33)
 	 * @return текстовый индекс колонки(AF)
 	 */
 	private String getColumnExcel(Integer value)
@@ -520,5 +598,25 @@ public class ToExcelSetev
 		}
 		// пустая строка, то возвращаем пустую строку
 		return "";
+	}
+
+	private Double parseStringToDouble(String value)
+	{
+		if (value != null)
+		{
+			value = value.replace(" ", "");
+			value = value.replace(",", ".");
+
+			try
+			{
+				return Double.parseDouble(value);
+			}
+			catch (Exception e)
+			{
+				return 0.0;
+			}
+		}
+
+		return 0.0;
 	}
 }
