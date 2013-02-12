@@ -484,14 +484,14 @@ public class ToExcelSetev
 
 				sheet.mergeCells(2 + x * 5, 4 + y * 52, 6 + x * 5, 4 + y * 52);
 
-				for (int res_i = 0; res_i < done.size(); res_i++)
+				for (int res_i = 0; res_i < result.size(); res_i++)
 				{
 					if (res_i == 19 || res_i == 38 || res_i == 40)
 					{
 						// пропуск строки
 						add_y++;
 					}
-					
+					System.out.println(res_i);
 					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
 
 					if(res.equals(done_num.get(res_i).get(0)))
@@ -604,6 +604,7 @@ public class ToExcelSetev
 	{
 		if (value != null)
 		{
+			value = value.replace(" ", "");
 			value = value.replace(" ", "");
 			value = value.replace(",", ".");
 

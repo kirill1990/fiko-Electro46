@@ -530,7 +530,8 @@ public class ToExcelSbut
 				sheet.addCell(new Label(4 + i * 5 + x * 6 * 5, 5 + y * 25, "СН1", tahoma9pt));
 				sheet.addCell(new Label(5 + i * 5 + x * 6 * 5, 5 + y * 25, "СН2", tahoma9pt));
 				sheet.addCell(new Label(6 + i * 5 + x * 6 * 5, 5 + y * 25, "НН", tahoma9pt));
-
+				
+				if(result.size()>0)
 				for (int a = 0; a < 19; a++)
 				{
 					for (int a2 = 1; a2 < 5; a2++)
@@ -851,7 +852,7 @@ public class ToExcelSbut
 			sheet.addCell(new Label(16 + x * 3 * 5, 5 + y * 12, "полупик", tahoma9pt));
 
 			int res_i = 0;
-
+			if(result.size()>0)
 			for (int i = 0; i < 5; i++)
 			{
 				for (int a = 0; a < 6; a++)
@@ -1163,7 +1164,8 @@ public class ToExcelSbut
 				sheet.addCell(new Label(4 + i * 5 + x * 5 * 5, 5 + y * 25, "СН1", tahoma9pt));
 				sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
 				sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
-
+				
+				if(result.size()>0)
 				for (int a = 0; a < 19; a++)
 				{
 					for (int a2 = 1; a2 < 5; a2++)
@@ -1452,6 +1454,7 @@ public class ToExcelSbut
 
 			int res_i = 0;
 
+			if(result.size()>0)
 			for (int i = 0; i < 6; i++)
 			{
 				sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 5 + y * 25, "Всего", tahoma9pt));
@@ -1489,7 +1492,7 @@ public class ToExcelSbut
 					for (int a2 = 1; a2 < 5; a2++)
 					{
 						Double res = parseStringToDouble(result.get(res_i).get(a2).toString());
-
+						System.out.println(res+"   "+done_num.get(res_i).get(a2));
 						if (res.equals(done_num.get(res_i).get(a2)))
 						{
 							sheet.addCell(new Label(2 + i * 5 + x * 6 * 5 + a2, 6 + y * 25 + a, result.get(res_i).get(a2).toString(), tahoma9ptYellow));
@@ -1500,6 +1503,7 @@ public class ToExcelSbut
 						}
 					}
 					Double res = parseStringToDouble(result.get(res_i).get(0).toString());
+					System.out.println(res+"   "+done_num.get(res_i).get(0));
 					if (res.equals(done_num.get(res_i).get(0)))
 					{
 						sheet.addCell(new Label(2 + i * 5 + x * 6 * 5, 6 + y * 25 + a, result.get(res_i++).get(0).toString(), tahoma9ptGreen));
@@ -1793,6 +1797,7 @@ public class ToExcelSbut
 				sheet.addCell(new Label(5 + i * 5 + x * 5 * 5, 5 + y * 25, "СН2", tahoma9pt));
 				sheet.addCell(new Label(6 + i * 5 + x * 5 * 5, 5 + y * 25, "НН", tahoma9pt));
 
+				if(result.size()>0)
 				for (int a = 0; a < 19; a++)
 				{
 					for (int a2 = 1; a2 < 5; a2++)
@@ -2039,7 +2044,7 @@ public class ToExcelSbut
 
 			int res_i = 0;
 
-			if (done.size() > 0)
+			if (result.size() > 0)
 			{
 				for (int a = 0; a < 17; a++)
 				{
@@ -2284,7 +2289,7 @@ public class ToExcelSbut
 
 			int res_i = 0;
 
-			if (done.size() > 0)
+			if (result.size() > 0)
 			{
 				for (int a = 0; a < 14; a++)
 				{
@@ -2378,11 +2383,13 @@ public class ToExcelSbut
 		if (value != null)
 		{
 			value = value.replace(" ", "");
+			value = value.replace(" ", "");
 			value = value.replace(",", ".");
 
 			try
 			{
-				return Double.parseDouble(value);
+				System.out.println(value);
+				return new BigDecimal(value).setScale(4, RoundingMode.HALF_UP).doubleValue();
 			}
 			catch (Exception e)
 			{
