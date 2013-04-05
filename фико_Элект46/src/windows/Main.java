@@ -1384,7 +1384,7 @@ public class Main extends JFrame
 						{
 							public void actionPerformed(ActionEvent e)
 							{
-								new ToExcelSetev(year);
+								//new ToExcelSetev(year);
 
 								Vector<String> name = new ConnectionBD().getNameSbut();
 
@@ -1393,7 +1393,7 @@ public class Main extends JFrame
 									new ToExcelSbut(name.get(i), name.get(i + 1), year);
 								}
 
-								//JOptionPane.showMessageDialog(null, "finish");
+								JOptionPane.showMessageDialog(null, "Сбытовые готовы");
 							}
 						});
 					}

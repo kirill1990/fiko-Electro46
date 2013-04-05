@@ -428,6 +428,7 @@ public class AddTableSbut extends SwingWorker
 				// table_id
 				content_otpusk5.add(Integer.toString(table_id));
 			}
+			System.out.println(table_id);
 			table_id++;
 		}
 
